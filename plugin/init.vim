@@ -10,14 +10,10 @@ if exists("g:barowGitInit")
 endif
 let g:barowGitInit = 1
 
-function s:Update()
-  call barow#update()
-endfunction
-
 augroup barowGit
   autocmd!
   autocmd BufNewFile,BufReadPre,CursorHold,BufEnter * call barowGit#init(expand("<afile>:p:h"))
-  autocmd User BarowGit call <SID>Update()
+  autocmd User BarowGit call barow#update()
 augroup END
 
 let &cpo = s:save_cpo

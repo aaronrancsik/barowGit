@@ -13,11 +13,9 @@ let g:barowGit = 1
 let b:job = 0
 
 function! s:OnEvent(job_id, data, event) dict
-  if a:event == 'stdout'
-    let b:branchName = a:data
-  elseif a:event == 'stderr'
-    echom 'stderr: '.join(a:data)
-  elseif a:data != 0
+  if a:event == 'stdout' && !empty(a:data[0])
+    let b:branchName = join(a:data)
+  elseif a:event == 'exit' && a:data != 0
     let b:branchName = ""
   endif
   doautocmd User BarowGit
@@ -34,8 +32,7 @@ endfunction
 function barowGit#init(path)
   let command = ['git', 'branch', '--show-current']
   let options = {
-        \ 'stdout_buffered': 1,
-        \ 'stderr_buffered': 1,
+        \ 'data_buffered': 1,
         \ 'on_stdout': function('s:OnEvent'),
         \ 'on_stderr': function('s:OnEvent'),
         \ 'on_exit': function('s:OnEvent')
