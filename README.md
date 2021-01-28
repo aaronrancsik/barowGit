@@ -8,6 +8,7 @@ A module to display the current git branch in [barow](https://github.com/doums/b
 " .vimrc/init.vim
 " ...
 
+Plug 'doums/barow'
 Plug 'doums/barowGit'
 " ...
 
