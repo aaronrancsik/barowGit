@@ -43,7 +43,7 @@ function barowGit#init(path)
   if !empty(a:path)
     let options.cwd = a:path
   endif
-  let b:job = job_start(command, options)
+  let b:job = jobstart(command, options)
 endfunction
 
 let &cpo = s:save_cpo
