@@ -30,7 +30,7 @@ function barowGit#branch()
 endfunction
 
 function barowGit#init(path)
-  if &filetype == 'help' || &filetype == 'qf'
+  if &filetype == 'help' || &filetype == 'qf' || getwininfo(win_getid())[0].terminal == 1
     return
   endif
   let command = ['git', 'branch', '--show-current']
