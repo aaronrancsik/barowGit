@@ -30,6 +30,9 @@ function barowGit#branch()
 endfunction
 
 function barowGit#init(path)
+  if &filetype == 'help' || &filetype == 'qf'
+    return
+  endif
   let command = ['git', 'branch', '--show-current']
   let options = {
         \ 'data_buffered': 1,
