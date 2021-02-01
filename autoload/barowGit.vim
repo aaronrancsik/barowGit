@@ -10,10 +10,24 @@ if exists("g:barowGit")
 endif
 let g:barowGit = 1
 
-function! s:on_event(job_id, data, event) dict
-  if a:event == 'stdout' && !empty(a:data[0])
+" function! s:on_event(job_id, data, event) dict
+  " if a:event == 'stdout' && !empty(a:data[0])
+    " let b:branchName = join(a:data)
+  " elseif a:event == 'exit' && a:data != 0
+    " let b:branchName = ""
+  " endif
+  " doautocmd User BarowGit
+" endfunction
+
+function! s:out_cb(jobid, data, ...)
+  if !empty(a:data[0])
     let b:branchName = join(a:data)
-  elseif a:event == 'exit' && a:data != 0
+  endif
+  doautocmd User BarowGit
+endfunction
+
+function! s:exit_cb(jobid, status, ...)
+  if a:status != 0
     let b:branchName = ""
   endif
   doautocmd User BarowGit
@@ -32,16 +46,26 @@ function barowGit#init(path)
     return
   endif
   let command = ['git', 'branch', '--show-current']
-  let options = {
-        \ 'data_buffered': 1,
-        \ 'on_stdout': function('s:on_event'),
-        \ 'on_stderr': function('s:on_event'),
-        \ 'on_exit': function('s:on_event')
-        \ }
+  if has("nvim")
+    let options = {
+          \ 'data_buffered': 1,
+          \ 'on_stdout': function('s:out_cb'),
+          \ 'on_exit': function('s:exit_cb')
+          \ }
+  else
+    let options = {
+          \ "out_cb": function('s:out_cb'),
+          \ "exit_cb": function('s:exit_cb')
+          \ }
+  endif
   if !empty(a:path)
     let options.cwd = a:path
   endif
-  call jobstart(command, options)
+  if has("nvim")
+    call jobstart(command, options)
+  else
+    call job_start(command, options)
+  endif
 endfunction
 
 let &cpo = s:save_cpo
