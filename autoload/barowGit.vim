@@ -10,18 +10,13 @@ if exists("g:barowGit")
 endif
 let g:barowGit = 1
 
-" function! s:on_event(job_id, data, event) dict
-  " if a:event == 'stdout' && !empty(a:data[0])
-    " let b:branchName = join(a:data)
-  " elseif a:event == 'exit' && a:data != 0
-    " let b:branchName = ""
-  " endif
-  " doautocmd User BarowGit
-" endfunction
-
 function! s:out_cb(jobid, data, ...)
-  if !empty(a:data[0])
-    let b:branchName = join(a:data)
+  if has("nvim")
+    if !empty(a:data[0])
+      let b:branchName = join(a:data)
+    endif
+  else
+    let b:branchName = a:data
   endif
   doautocmd User BarowGit
 endfunction
@@ -34,6 +29,9 @@ function! s:exit_cb(jobid, status, ...)
 endfunction
 
 function barowGit#branch()
+  if &filetype =~# 'help\|man\|qf' || getwininfo(win_getid())[0].terminal == 1
+    return ""
+  endif
   if exists("b:branchName")
     return b:branchName
   else
