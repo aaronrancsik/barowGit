@@ -10,9 +10,7 @@ if exists("g:barowGit")
 endif
 let g:barowGit = 1
 
-let b:job = 0
-
-function! s:OnEvent(job_id, data, event) dict
+function! s:on_event(job_id, data, event) dict
   if a:event == 'stdout' && !empty(a:data[0])
     let b:branchName = join(a:data)
   elseif a:event == 'exit' && a:data != 0
@@ -36,14 +34,14 @@ function barowGit#init(path)
   let command = ['git', 'branch', '--show-current']
   let options = {
         \ 'data_buffered': 1,
-        \ 'on_stdout': function('s:OnEvent'),
-        \ 'on_stderr': function('s:OnEvent'),
-        \ 'on_exit': function('s:OnEvent')
+        \ 'on_stdout': function('s:on_event'),
+        \ 'on_stderr': function('s:on_event'),
+        \ 'on_exit': function('s:on_event')
         \ }
   if !empty(a:path)
     let options.cwd = a:path
   endif
-  let b:job = jobstart(command, options)
+  call jobstart(command, options)
 endfunction
 
 let &cpo = s:save_cpo
