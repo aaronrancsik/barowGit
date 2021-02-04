@@ -30,7 +30,7 @@ endfunction
 
 function! s:check_win_type()
   let info = getwininfo(win_getid())
-  if &filetype =~# 'help\|man\|qf'
+  if &filetype =~# 'help\|man\|qf\|netrw'
         \|| info[0].loclist == 1
         \|| info[0].quickfix == 1
         \|| info[0].terminal == 1
