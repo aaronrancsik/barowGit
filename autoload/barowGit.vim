@@ -5,13 +5,13 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-if exists("g:barowGit")
+if exists('g:barowGit')
   finish
 endif
 let g:barowGit = 1
 
 function! s:out_cb(jobid, data, ...)
-  if has("nvim")
+  if has('nvim')
     if !empty(a:data[0])
       let b:branchName = join(a:data)
     endif
@@ -23,28 +23,40 @@ endfunction
 
 function! s:exit_cb(jobid, status, ...)
   if a:status != 0
-    let b:branchName = ""
+    let b:branchName = ''
   endif
   doautocmd User BarowGit
 endfunction
 
-function barowGit#branch()
-  if &filetype =~# 'help\|man\|qf' || getwininfo(win_getid())[0].terminal == 1
-    return ""
+function! s:check_win_type()
+  let info = getwininfo(win_getid())
+  if &filetype =~# 'help\|man\|qf'
+        \|| info[0].loclist == 1
+        \|| info[0].quickfix == 1
+        \|| info[0].terminal == 1
+        \|| &previewwindow == 1
+    return 0
   endif
-  if exists("b:branchName")
+  return 1
+endfunction
+
+function! barowGit#branch()
+  if !s:check_win_type()
+    return ''
+  endif
+  if exists('b:branchName')
     return b:branchName
   else
-    return ""
+    return ''
   endif
 endfunction
 
-function barowGit#init(path)
-  if &filetype =~# 'help\|man\|qf' || getwininfo(win_getid())[0].terminal == 1
+function! barowGit#init(path)
+  if !s:check_win_type()
     return
   endif
   let command = ['git', 'branch', '--show-current']
-  if has("nvim")
+  if has('nvim')
     let options = {
           \ 'data_buffered': 1,
           \ 'on_stdout': function('s:out_cb'),
@@ -52,14 +64,14 @@ function barowGit#init(path)
           \ }
   else
     let options = {
-          \ "out_cb": function('s:out_cb'),
-          \ "exit_cb": function('s:exit_cb')
+          \ 'out_cb': function('s:out_cb'),
+          \ 'exit_cb': function('s:exit_cb')
           \ }
   endif
   if !empty(a:path)
     let options.cwd = a:path
   endif
-  if has("nvim")
+  if has('nvim')
     call jobstart(command, options)
   else
     call job_start(command, options)

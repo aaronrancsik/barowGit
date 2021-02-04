@@ -5,14 +5,14 @@
 let s:save_cpo = &cpo
 set cpo&vim
 
-if exists("g:barowGitInit")
+if exists('g:barowGitInit')
   finish
 endif
 let g:barowGitInit = 1
 
 augroup barowGit
   autocmd!
-  autocmd BufNewFile,BufReadPre,CursorHold,BufEnter * call barowGit#init(expand("<afile>:p:h"))
+  autocmd BufNewFile,BufReadPre,CursorHold,BufEnter * call barowGit#init(expand('<afile>:p:h'))
   autocmd User BarowGit call barow#update()
 augroup END
 
