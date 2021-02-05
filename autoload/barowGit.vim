@@ -68,7 +68,7 @@ function! barowGit#init(path)
           \ 'exit_cb': function('s:exit_cb')
           \ }
   endif
-  if !empty(a:path)
+  if isdirectory(a:path)
     let options.cwd = a:path
   endif
   if has('nvim')
