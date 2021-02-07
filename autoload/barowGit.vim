@@ -2,13 +2,13 @@
 " License, v. 2.0. If a copy of the MPL was not distributed with this
 " file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-let s:save_cpo = &cpo
-set cpo&vim
-
 if exists('g:barowGit')
   finish
 endif
 let g:barowGit = 1
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 function! s:out_cb(jobid, data, ...)
   if has('nvim')
@@ -30,11 +30,12 @@ endfunction
 
 function! s:check_win_type()
   let info = getwininfo(win_getid())
-  if &filetype =~# 'help\|man\|qf\|netrw'
+  if !empty(&buftype)
+        \|| &previewwindow == 1
+        \|| &filetype =~# 'qf\|netrw'
         \|| info[0].loclist == 1
         \|| info[0].quickfix == 1
         \|| info[0].terminal == 1
-        \|| &previewwindow == 1
     return 0
   endif
   return 1

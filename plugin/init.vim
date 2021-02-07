@@ -2,13 +2,13 @@
 " License, v. 2.0. If a copy of the MPL was not distributed with this
 " file, You can obtain one at https://mozilla.org/MPL/2.0/.
 
-let s:save_cpo = &cpo
-set cpo&vim
-
 if exists('g:barowGitInit')
   finish
 endif
 let g:barowGitInit = 1
+
+let s:save_cpo = &cpo
+set cpo&vim
 
 augroup barowGit
   autocmd!
