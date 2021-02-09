@@ -59,7 +59,7 @@ function! barowGit#init(path)
   let command = ['git', 'branch', '--show-current']
   if has('nvim')
     let options = {
-          \ 'data_buffered': 1,
+          \ 'stdout_buffered': 1,
           \ 'on_stdout': function('s:out_cb'),
           \ 'on_exit': function('s:exit_cb')
           \ }
