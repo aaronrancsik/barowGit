@@ -10,6 +10,8 @@ let g:barowGit = 1
 let s:save_cpo = &cpo
 set cpo&vim
 
+let s:t = 0
+
 function! s:out_cb(jobid, data, ...)
   if has('nvim')
     if !empty(a:data[0])
@@ -77,6 +79,17 @@ function! barowGit#init(path)
   else
     call job_start(command, options)
   endif
+endfunction
+
+function! barowGit#cursor_hold(path)
+  if !empty(s:t)
+    let elapsed = reltimefloat(reltime(s:t, reltime()))
+    if elapsed < 2
+      return
+    endif
+  endif
+  let s:t = reltime()
+  call barowGit#init(a:path)
 endfunction
 
 let &cpo = s:save_cpo

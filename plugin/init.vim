@@ -12,7 +12,8 @@ set cpo&vim
 
 augroup barowGit
   autocmd!
-  autocmd BufNewFile,BufReadPre,CursorHold,BufEnter * call barowGit#init(expand('<afile>:p:h'))
+  autocmd BufNewFile,BufReadPre,BufEnter * call barowGit#init(expand('<afile>:p:h'))
+  autocmd CursorHold * call barowGit#cursor_hold(expand('<afile>:p:h'))
   autocmd User BarowGit call barow#update()
 augroup END
 
