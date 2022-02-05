@@ -20,14 +20,18 @@ function! s:out_cb(jobid, data, ...)
   else
     let b:branchName = a:data
   endif
-  doautocmd User BarowGit
+  if bufname('%') != ''
+    doautocmd User BarowGit
+  endif
 endfunction
 
 function! s:exit_cb(jobid, status, ...)
   if a:status != 0
     let b:branchName = ''
   endif
-  doautocmd User BarowGit
+  if bufname('%') != ''
+    doautocmd User BarowGit
+  endif
 endfunction
 
 function! s:check_win_type()
